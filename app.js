@@ -1,14 +1,12 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
+const { getAllTopics } = require(`./controllers`);
 
 app.get(`/api/topics`, getAllTopics);
 
-app.use((err, req, res, next) => {
-  if (err.msg && err.status) {
-    res.status(err.status).send({ msg: err.msg });
-  } else {
-    next(err);
-  }
+app.all("/*", (req, res) => {
+  res.status(404).send({ msg: "Route not found" });
 });
+
 module.exports = app;
