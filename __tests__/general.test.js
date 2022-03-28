@@ -13,12 +13,12 @@ describe(`GET/api/topics`, () => {
     description: expect.any(String),
   };
   test(`200: responds with an array of all topics`, async () => {
-    const res = await request(app).get(`/api/topics`).expect(200);
+    const res = await request(app).get(`/api/topics`);
     return res.body.topics.forEach((topic) => {
       expect(topic).toMatchObject(topicObj);
     });
   });
-  test.only(`404: invalid path results in a 404 error`, async () => {
+  test(`404: invalid path results in a 404 error`, async () => {
     const res = await request(app).get(`/api/not_a_path`).expect(404);
     return expect(res.body.msg).toBe("Route not found");
   });
