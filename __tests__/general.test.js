@@ -106,7 +106,7 @@ describe("PATCH/api/articles/:article_id", () => {
   test("responds with correct error message for incorrect patch body", () => {
     return request(app)
       .patch("/api/articles/1")
-      .send({ inc_votes: "cheese" })
+      .send({ inc_votes: "this is not a vote" })
       .expect(400)
       .then((result) => {});
   });
