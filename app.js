@@ -5,10 +5,12 @@ app.use(express.json());
 const { getAllTopics } = require(`./controllers/topic.controller`);
 const { getArticleById } = require(`./controllers/article.controller`);
 const { patchByArticleId } = require(`./controllers/article.controller`);
+const { getAllUsers } = require(`./controllers/users.controllers`);
 
 app.get(`/api/topics`, getAllTopics);
 app.get(`/api/articles/:article_id`, getArticleById);
 app.patch(`/api/articles/:article_id`, patchByArticleId);
+app.get(`/api/users`, getAllUsers);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
