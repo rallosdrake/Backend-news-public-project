@@ -188,3 +188,49 @@ describe(`GET/api/articles`, () => {
       });
   });
 });
+describe("GET/api/articles/:article_id/comments", () => {
+  test("responds with array of comments with correct properties", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.comments).toBeInstanceOf(Array);
+        result.body.comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+          });
+        });
+      });
+  });
+  test("responds with correct error message for datatype", () => {
+    return request(app)
+      .get("/api/articles/cheese/comments")
+      .expect(400)
+      .then((result) => {
+        expect(result.body).toEqual({
+          msg: "bad request",
+        });
+      });
+  });
+  test("responds with correct error message for 404", () => {
+    return request(app)
+      .get("/api/articles/1000/comments")
+      .expect(404)
+      .then((result) => {
+        expect(result.text).toBe("Article not found");
+      });
+  });
+  test("responds with empty array for article without comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.comments).toBeInstanceOf(Array);
+        expect(result.body.comments.length).toBe(0);
+      });
+  });
+});
