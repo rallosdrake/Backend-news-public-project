@@ -151,3 +151,40 @@ describe(`GET/api/articles/article_id COMMENT COUNT`, () => {
       });
   });
 });
+describe(`GET/api/articles`, () => {
+  test(`200: responds with an array of all articles with both a comment count and author`, () => {
+    const articleOb = {
+      author: expect.any(String),
+      title: expect.any(String),
+      article_id: expect.any(Number),
+      body: expect.any(String),
+      topic: expect.any(String),
+      created_at: expect.any(String),
+      votes: expect.any(Number),
+      comment_count: expect.any(Number),
+    };
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then((result) => {
+        expect(result.body.articles).toBeInstanceOf(Array);
+        result.body.articles.forEach((article) => {
+          expect(article).toMatchObject(articleOb);
+        });
+      });
+  });
+  test(`checks if object is sorted by date is descending order`, () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then((result) => {
+        result.body.articles.forEach((article) => {
+          expect([
+            { article_id: 1, article_id: 5, article_id: 6, article_id: 9 },
+          ]).toBeSortedBy(`created_at`, {
+            descending: true,
+          });
+        });
+      });
+  });
+});
