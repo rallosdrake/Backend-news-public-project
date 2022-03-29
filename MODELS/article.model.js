@@ -37,3 +37,18 @@ exports.changeArticleById = (article_id, inc_votes) => {
     return Promise.reject({ status: 400, msg: "Invalid patch body" });
   }
 };
+
+exports.fetchArticles = () => {
+  return db
+    .query(
+      `SELECT articles.*, COUNT(comments.article_id)::INTEGER AS comment_count
+    FROM comments
+    LEFT JOIN articles
+    ON articles.article_id = comments.article_id
+    group BY articles.article_id
+    ORDER BY created_at DESC;`
+    )
+    .then((result) => {
+      return result.rows;
+    });
+};
