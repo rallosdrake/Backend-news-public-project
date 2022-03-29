@@ -1,5 +1,5 @@
-const db = require("./db/connection");
-const { getTopics } = require(`./MODELS/topic.model`);
+const db = require("../db/connection");
+const { getTopics } = require(`../MODELS/topic.model`);
 
 exports.getAllTopics = (req, res, next) => {
   getTopics()

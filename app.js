@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-const { getAllTopics } = require(`./controllers`);
+const { getAllTopics } = require(`./CONTROLERS/topic.controllers`);
 
 app.get(`/api/topics`, getAllTopics);
 
