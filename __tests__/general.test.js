@@ -130,3 +130,24 @@ describe("GET/api/users", () => {
     return expect(res.body.msg).toBe("Route not found");
   });
 });
+describe(`GET/api/articles/article_id COMMENT COUNT`, () => {
+  test(`Responds with an article object that has the correct comment count`, () => {
+    const articleObj = {
+      author: expect.any(String),
+      title: expect.any(String),
+      article_id: expect.any(Number),
+      body: expect.any(String),
+      topic: expect.any(String),
+      created_at: expect.any(String),
+      votes: expect.any(Number),
+      comment_count: expect.any(Number),
+    };
+    return request(app)
+      .get(`/api/articles/1`)
+      .expect(200)
+      .then((result) => {
+        expect(result.body.article).toBeInstanceOf(Object);
+        expect(result.body.article).toMatchObject(articleObj);
+      });
+  });
+});
