@@ -1,9 +1,11 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-const { getAllTopics } = require(`./CONTROLERS/topic.controllers`);
+const { getArticleById } = require(`./controllers/article.controller`);
+const { getAllTopics } = require(`./controllers/topic.controller`);
 
 app.get(`/api/topics`, getAllTopics);
+app.get(`/api/articles/:article_id`, getArticleById);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
@@ -28,7 +30,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-// handle unexpected errors
+//handle unexpected errors
 app.use((err, req, res, next) => {
   res.sendStatus(500);
 });
