@@ -163,37 +163,33 @@ describe(`GET/api/articles`, () => {
       votes: expect.any(Number),
       comment_count: expect.any(Number),
     };
-    return (
-      request(app)
-        .get(`/api/articles`)
-        // .expect(200)
-        .then((result) => {
-          expect(result.body.articles).toBeInstanceOf(Array);
-          result.body.articles.forEach((article) => {
-            expect(article).toMatchObject(articleOb);
-          });
-        })
-    );
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then((result) => {
+        expect(result.body.articles).toBeInstanceOf(Array);
+        result.body.articles.forEach((article) => {
+          expect(article).toMatchObject(articleOb);
+        });
+      });
   });
-  test(`checks if object is sorted by date is descending order`, () => {
-    return (
-      request(app)
-        .get(`/api/articles`)
-        // .expect(200)
-        .then((result) => {
-          result.body.articles.forEach((article) => {
-            expect([
-              { article_id: 1, article_id: 5, article_id: 6, article_id: 9 },
-            ]).toBeSortedBy(`created_at`, {
-              descending: true,
-            });
+  test(`200:checks if object is sorted by date is descending order`, () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then((result) => {
+        result.body.articles.forEach((article) => {
+          expect([
+            { article_id: 1, article_id: 5, article_id: 6, article_id: 9 },
+          ]).toBeSortedBy(`created_at`, {
+            descending: true,
           });
-        })
-    );
+        });
+      });
   });
 });
 describe("GET/api/articles/:article_id/comments", () => {
-  test("responds with array of comments with correct properties", () => {
+  test("200:responds with array of comments with correct properties", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
@@ -211,8 +207,7 @@ describe("GET/api/articles/:article_id/comments", () => {
       });
   });
 
-  test("responds with correct error message for datatype", () => {
-
+  test("400:responds with correct error message for datatype", () => {
     return request(app)
       .get("/api/articles/cheese/comments")
       .expect(400)
@@ -222,7 +217,7 @@ describe("GET/api/articles/:article_id/comments", () => {
         });
       });
   });
-  test("responds with correct error message for 404", () => {
+  test("200:responds with correct error message for 404", () => {
     return request(app)
       .get("/api/articles/1000/comments")
       .expect(404)
@@ -230,7 +225,7 @@ describe("GET/api/articles/:article_id/comments", () => {
         expect(result.text).toBe("article not found");
       });
   });
-  test("responds with empty array for article without comments", () => {
+  test("200:responds with empty array for article without comments", () => {
     return request(app)
       .get("/api/articles/2/comments")
       .expect(200)
