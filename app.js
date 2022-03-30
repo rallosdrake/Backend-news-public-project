@@ -7,12 +7,14 @@ const { getArticleById } = require(`./controllers/article.controller`);
 const { patchByArticleId } = require(`./controllers/article.controller`);
 const { getAllUsers } = require(`./controllers/users.controllers`);
 const { getAllArticles } = require(`./controllers/article.controller`);
+const { getCommentsById } = require(`./controllers/article.controller`);
 
 app.get(`/api/topics`, getAllTopics);
 app.get(`/api/articles/:article_id`, getArticleById);
 app.patch(`/api/articles/:article_id`, patchByArticleId);
 app.get(`/api/users`, getAllUsers);
 app.get(`/api/articles`, getAllArticles);
+app.get(`/api/articles/:article_id/comments`, getCommentsById);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });

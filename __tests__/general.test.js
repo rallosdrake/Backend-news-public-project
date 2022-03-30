@@ -163,28 +163,80 @@ describe(`GET/api/articles`, () => {
       votes: expect.any(Number),
       comment_count: expect.any(Number),
     };
+    return (
+      request(app)
+        .get(`/api/articles`)
+        // .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeInstanceOf(Array);
+          result.body.articles.forEach((article) => {
+            expect(article).toMatchObject(articleOb);
+          });
+        })
+    );
+  });
+  test(`checks if object is sorted by date is descending order`, () => {
+    return (
+      request(app)
+        .get(`/api/articles`)
+        // .expect(200)
+        .then((result) => {
+          result.body.articles.forEach((article) => {
+            expect([
+              { article_id: 1, article_id: 5, article_id: 6, article_id: 9 },
+            ]).toBeSortedBy(`created_at`, {
+              descending: true,
+            });
+          });
+        })
+    );
+  });
+});
+describe("GET/api/articles/:article_id/comments", () => {
+  test("responds with array of comments with correct properties", () => {
     return request(app)
-      .get(`/api/articles`)
+      .get("/api/articles/1/comments")
       .expect(200)
       .then((result) => {
-        expect(result.body.articles).toBeInstanceOf(Array);
-        result.body.articles.forEach((article) => {
-          expect(article).toMatchObject(articleOb);
+        expect(result.body.comments).toBeInstanceOf(Array);
+        result.body.comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+          });
         });
       });
   });
-  test(`200: checks if object is sorted by date is descending order`, () => {
+
+  test("responds with correct error message for datatype", () => {
+
     return request(app)
-      .get(`/api/articles`)
+      .get("/api/articles/cheese/comments")
+      .expect(400)
+      .then((result) => {
+        expect(result.body).toEqual({
+          msg: "bad request",
+        });
+      });
+  });
+  test("responds with correct error message for 404", () => {
+    return request(app)
+      .get("/api/articles/1000/comments")
+      .expect(404)
+      .then((result) => {
+        expect(result.text).toBe("article not found");
+      });
+  });
+  test("responds with empty array for article without comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
       .expect(200)
       .then((result) => {
-        result.body.articles.forEach((article) => {
-          expect([
-            { article_id: 1, article_id: 5, article_id: 6, article_id: 9 },
-          ]).toBeSortedBy(`created_at`, {
-            descending: true,
-          });
-        });
+        expect(result.body.comments).toBeInstanceOf(Array);
+        expect(result.body.comments.length).toBe(0);
       });
   });
 });
