@@ -53,9 +53,38 @@ exports.fetchArticles = () => {
     });
 };
 
+// exports.fetchComments = (article_id) => {
+//   return db
+//     .query(`SELECT * FROM comments WHERE article_id = $1;`, [article_id])
+//     .then((result) => {
+//       console.log(result.rows, "length");
+//       if (!result.rows.length) {
+//         return Promise.reject({ status: 404, msg: "Article not found" });
+//       } else {
+//         return result.rows;
+//       }
+//     });
+// };
+
+// exports.fetchComments = (article_id) => {
+//   return db
+//     .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
+//     .then((result) => {
+//       if (result.rows.length) {
+//         return db
+//           .query(`SELECT * FROM comments WHERE article_id = $1;`, [article_id])
+//           .then((result) => {
+//             return result.rows;
+//           });
+//       } else {
+//         return Promise.reject({ status: 404, msg: "Article not found" });
+//       }
+//     });
+// };
+
 exports.fetchComments = (article_id) => {
   return db
-    .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
+    .query("SELECT * FROM articles WHERE article_id = $1;", [article_id])
     .then((result) => {
       if (result.rows.length) {
         return db
@@ -64,7 +93,7 @@ exports.fetchComments = (article_id) => {
             return result.rows;
           });
       } else {
-        return Promise.reject({ status: 404, msg: "Article not found" });
+        return Promise.reject({ status: 404, msg: "article not found" });
       }
     });
 };

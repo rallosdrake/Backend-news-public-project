@@ -163,29 +163,33 @@ describe(`GET/api/articles`, () => {
       votes: expect.any(Number),
       comment_count: expect.any(Number),
     };
-    return request(app)
-      .get(`/api/articles`)
-      .expect(200)
-      .then((result) => {
-        expect(result.body.articles).toBeInstanceOf(Array);
-        result.body.articles.forEach((article) => {
-          expect(article).toMatchObject(articleOb);
-        });
-      });
+    return (
+      request(app)
+        .get(`/api/articles`)
+        // .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeInstanceOf(Array);
+          result.body.articles.forEach((article) => {
+            expect(article).toMatchObject(articleOb);
+          });
+        })
+    );
   });
   test(`checks if object is sorted by date is descending order`, () => {
-    return request(app)
-      .get(`/api/articles`)
-      .expect(200)
-      .then((result) => {
-        result.body.articles.forEach((article) => {
-          expect([
-            { article_id: 1, article_id: 5, article_id: 6, article_id: 9 },
-          ]).toBeSortedBy(`created_at`, {
-            descending: true,
+    return (
+      request(app)
+        .get(`/api/articles`)
+        // .expect(200)
+        .then((result) => {
+          result.body.articles.forEach((article) => {
+            expect([
+              { article_id: 1, article_id: 5, article_id: 6, article_id: 9 },
+            ]).toBeSortedBy(`created_at`, {
+              descending: true,
+            });
           });
-        });
-      });
+        })
+    );
   });
 });
 describe("GET/api/articles/:article_id/comments", () => {
@@ -221,7 +225,7 @@ describe("GET/api/articles/:article_id/comments", () => {
       .get("/api/articles/1000/comments")
       .expect(404)
       .then((result) => {
-        expect(result.text).toBe("Article not found");
+        expect(result.text).toBe("article not found");
       });
   });
   test("responds with empty array for article without comments", () => {
