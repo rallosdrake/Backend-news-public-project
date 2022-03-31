@@ -35,7 +35,7 @@ const data = {
       comment_id: 1,
       votes: 6,
       created_at: "2020-10-11",
-      author: "william",
+      author: "James",
       body: "this is my article",
     },
   },
@@ -43,7 +43,7 @@ const data = {
     description: "returns an array of all users",
     exampleResponse: [
       {
-        username: "william",
+        username: "James",
       },
     ],
   },
@@ -54,7 +54,7 @@ const data = {
         comment_id: 1,
         votes: 5,
         created_at: "2021-10-9",
-        author: "william",
+        author: "James",
         body: "this is my comment",
       },
     ],
@@ -65,18 +65,18 @@ const data = {
       comment_id: 1,
       votes: 0,
       created_at: "2046-12-07",
-      author: "william",
+      author: "James",
       body: "this is my comment",
     },
     exampleBody: {
-      username: "william",
+      username: "James",
       body: "this is my comment",
     },
   },
   "PATCH/api/articles/:article_id": {
     description: "returns the updated object when given correct input",
     exampleResponse: {
-      author: "william",
+      author: "James",
       title: "the saga",
       article_id: 1,
       body: "this is my article",
