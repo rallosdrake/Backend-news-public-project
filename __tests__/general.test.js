@@ -213,7 +213,7 @@ describe("GET/api/articles/:article_id/comments", () => {
       .expect(400)
       .then((result) => {
         expect(result.body).toEqual({
-          msg: "bad request",
+          msg: "Invalid data type for body or request",
         });
       });
   });
@@ -232,6 +232,81 @@ describe("GET/api/articles/:article_id/comments", () => {
       .then((result) => {
         expect(result.body.comments).toBeInstanceOf(Array);
         expect(result.body.comments.length).toBe(0);
+      });
+  });
+});
+describe("POST/api/articles/:article_id/comments", () => {
+  test("200:responds with posted comment in correct format", () => {
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send({
+        username: "butter_bridge",
+        body: "Great article",
+      })
+      .expect(200)
+      .then((result) => {
+        expect(result.body.comment).toBeInstanceOf(Object);
+        expect(result.body.comment).toMatchObject({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+        });
+      });
+  });
+  test("400:responds with correct error message for datatype", () => {
+    return request(app)
+      .post("/api/articles/not_a_comment/comments")
+      .send({
+        username: "butter_bridge",
+        body: "ERROR",
+      })
+      .expect(400)
+      .then((result) => {
+        expect(result.body).toEqual({
+          msg: "Invalid data type for body or request",
+        });
+      });
+  });
+  test("404:responds with correct error message for 404", () => {
+    return request(app)
+      .post("/api/articles/1000/comments")
+      .send({
+        username: "butter_bridge",
+        body: "this is great",
+      })
+      .expect(404)
+      .then((result) => {
+        expect(result.text).toBe("article not found");
+      });
+  });
+  test("400:responds with correct error message for psql error", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        name: "butter_bridge",
+        body: "It works hun 2",
+      })
+      .expect(400)
+      .then((result) => {
+        expect(result.body).toMatchObject({
+          msg: "Invalid data type for body or request",
+        });
+      });
+  });
+  test("400:responds with correct error message for incorrect username", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        username: "Alix",
+        body: "Its good hun",
+      })
+      .expect(400)
+      .then((result) => {
+        expect(result.body).toMatchObject({
+          msg: "Input in body does not exist in database",
+        });
       });
   });
 });
