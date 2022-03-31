@@ -295,17 +295,18 @@ describe("POST/api/articles/:article_id/comments", () => {
         });
       });
   });
-  test("400:responds with correct error message for incorrect username", () => {
+  test("404:responds with correct error message for incorrect username", () => {
     return request(app)
       .post("/api/articles/1/comments")
       .send({
         username: "Alix",
         body: "Its good hun",
       })
-      .expect(400)
+      .expect(404)
       .then((result) => {
+        console.log(result);
         expect(result.body).toMatchObject({
-          msg: "Input in body does not exist in database",
+          msg: "Username does not exist in database",
         });
       });
   });

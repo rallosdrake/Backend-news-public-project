@@ -30,7 +30,7 @@ app.use((err, req, res, next) => {
   if (badReq.includes(err.code)) {
     res.status(400).send({ msg: "Invalid data type for body or request" });
   } else if (err.code === "23503") {
-    res.status(400).send({ msg: "Input in body does not exist in database" });
+    res.status(404).send({ msg: "Username does not exist in database" });
   } else {
     next(err);
   }
