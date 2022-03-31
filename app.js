@@ -7,6 +7,7 @@ const {
   handleServerErrors,
   handleRouteErrors,
 } = require(`./errors/index`);
+
 const apiRouter = require(`./Routes/api-routes`);
 
 app.use(`/api`, apiRouter);
