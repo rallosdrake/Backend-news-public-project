@@ -2,7 +2,7 @@ const {
   fetchArticleById,
   changeArticleById,
   fetchArticles,
-  fetchComments,
+  fetchCommentsById,
   addCommentsById,
 } = require("../MODELS/article.model");
 
@@ -30,7 +30,8 @@ exports.patchByArticleId = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  fetchArticles()
+  const { sort_by, order, topic } = req.query;
+  fetchArticles(sort_by, order, topic)
     .then((result) => {
       res.send({ articles: result });
     })
@@ -41,7 +42,7 @@ exports.getAllArticles = (req, res, next) => {
 
 exports.getCommentsById = (req, res, next) => {
   const { article_id } = req.params;
-  fetchComments(article_id)
+  fetchCommentsById(article_id)
     .then((result) => {
       res.send({ comments: result });
     })

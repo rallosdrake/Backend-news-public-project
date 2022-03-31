@@ -38,22 +38,49 @@ exports.changeArticleById = (article_id, inc_votes) => {
   }
 };
 
-exports.fetchArticles = () => {
-  return db
-    .query(
-      `SELECT articles.*, COUNT(comments.article_id)::INTEGER AS comment_count
+exports.fetchArticles = async (
+  sort_by = "created_at",
+  order = "desc",
+  topic
+) => {
+  const queryValues = [];
+  const Topics = await db.query("SELECT slug FROM topics;");
+  const validTopics = Topics.rows.map((topic) => topic.slug);
+  const validSort_by = [
+    "created_at",
+    "title",
+    "topic",
+    "author",
+    "body",
+    "votes",
+  ];
+  const validOrder = ["asc", "desc"];
+  if (!validSort_by.includes(sort_by) || !validOrder.includes(order)) {
+    return Promise.reject({ status: 400, msg: "incorrect sort_by or order" });
+  }
+  let queryStr = `SELECT articles.*, COUNT(comments.article_id)::INTEGER AS comment_count
     FROM comments
     LEFT JOIN articles
-    ON articles.article_id = comments.article_id
-    group BY articles.article_id
-    ORDER BY created_at DESC;`
-    )
-    .then((result) => {
+    ON articles.article_id = comments.article_id`;
+  if (validTopics.includes(topic)) {
+    queryStr += ` WHERE articles.topic = $1`;
+    queryValues.push(topic);
+  }
+  queryStr += ` GROUP BY articles.article_id`;
+  queryStr += ` ORDER BY ${sort_by} ${order};`;
+  if (topic) {
+    if (queryValues.length) {
+      const result = await db.query(queryStr, queryValues);
       return result.rows;
-    });
+    } else {
+      return Promise.reject({ status: 404, msg: "this topic does not exist" });
+    }
+  }
+  const result = await db.query(queryStr, queryValues);
+  return result.rows;
 };
 
-exports.fetchComments = (article_id) => {
+exports.fetchCommentsById = (article_id) => {
   return db
     .query("SELECT * FROM articles WHERE article_id = $1;", [article_id])
     .then((result) => {
@@ -68,6 +95,7 @@ exports.fetchComments = (article_id) => {
       }
     });
 };
+
 exports.addCommentsById = (article_id, body, username) => {
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
