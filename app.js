@@ -26,7 +26,7 @@ app.delete(`/api/comments/:comment_id`, deleteCommentById);
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
 });
-//handle PSQL erros
+//handle PSQL errors
 app.use((err, req, res, next) => {
   const badReq = ["23502", "22P02"];
   if (badReq.includes(err.code)) {
