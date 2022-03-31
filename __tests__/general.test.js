@@ -3,6 +3,7 @@ const testData = require(`../db/data/test-data`);
 const seed = require(`../db/seeds/seed`);
 const request = require(`supertest`);
 const app = require(`../app`);
+const data = require("../endpoints.js");
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -45,7 +46,9 @@ describe("GET/api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/9999")
       .expect(404)
-      .then((result) => {});
+      .then((result) => {
+        expect(result.text).toBe("Invalid article_id");
+      });
   });
 });
 describe("PATCH/api/articles/:article_id", () => {
@@ -328,5 +331,15 @@ describe("DELETE/api/comments/:comment_id", () => {
       .delete("/api/comments/cheese")
       .expect(400)
       .then(() => {});
+  });
+});
+describe("GET/api", () => {
+  test("200: Responds with a list of all endpoints and there uses", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((result) => {
+        expect(result.body).toEqual(data);
+      });
   });
 });
