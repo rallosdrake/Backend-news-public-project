@@ -2,27 +2,9 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-const {
-  getArticleById,
-  patchByArticleId,
-  getAllArticles,
-  getCommentsById,
-  postCommentsById,
-} = require(`./controllers/article.controller`);
-const { getAllTopics } = require(`./controllers/topic.controller`);
-const { getAllUsers } = require(`./controllers/users.controllers`);
-const { deleteCommentById } = require(`./controllers/comments.controller`);
-const { getApi } = require(`./controllers/api.controllers`);
+const apiRouter = require(`./Routes/api-routes`);
 
-app.get(`/api/topics`, getAllTopics);
-app.get(`/api/articles/:article_id`, getArticleById);
-app.patch(`/api/articles/:article_id`, patchByArticleId);
-app.get(`/api/users`, getAllUsers);
-app.get(`/api/articles`, getAllArticles);
-app.get(`/api/articles/:article_id/comments`, getCommentsById);
-app.post(`/api/articles/:article_id/comments`, postCommentsById);
-app.delete(`/api/comments/:comment_id`, deleteCommentById);
-app.get(`/api`, getApi);
+app.use(`/api`, apiRouter);
 
 //handle route errors
 app.all("/*", (req, res) => {
