@@ -310,3 +310,23 @@ describe("POST/api/articles/:article_id/comments", () => {
       });
   });
 });
+describe("DELETE/api/comments/:comment_id", () => {
+  test("204: Removes a comment by ID", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(() => {});
+  });
+  test("404:returns 404 not found for invalid comment_id", () => {
+    return request(app)
+      .delete("/api/comments/1000")
+      .expect(404)
+      .then(() => {});
+  });
+  test("400:returns 400 for wrong datatype in comment_id", () => {
+    return request(app)
+      .delete("/api/comments/cheese")
+      .expect(400)
+      .then(() => {});
+  });
+});
