@@ -304,7 +304,6 @@ describe("POST/api/articles/:article_id/comments", () => {
       })
       .expect(404)
       .then((result) => {
-        console.log(result);
         expect(result.body).toMatchObject({
           msg: "Username does not exist in database",
         });
