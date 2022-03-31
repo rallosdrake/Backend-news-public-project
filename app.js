@@ -2,12 +2,15 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+const {
+  getArticleById,
+  patchByArticleId,
+  getAllArticles,
+  getCommentsById,
+  postCommentsById,
+} = require(`./controllers/article.controller`);
 const { getAllTopics } = require(`./controllers/topic.controller`);
-const { getArticleById } = require(`./controllers/article.controller`);
-const { patchByArticleId } = require(`./controllers/article.controller`);
 const { getAllUsers } = require(`./controllers/users.controllers`);
-const { getAllArticles } = require(`./controllers/article.controller`);
-const { getCommentsById } = require(`./controllers/article.controller`);
 
 app.get(`/api/topics`, getAllTopics);
 app.get(`/api/articles/:article_id`, getArticleById);
@@ -15,21 +18,23 @@ app.patch(`/api/articles/:article_id`, patchByArticleId);
 app.get(`/api/users`, getAllUsers);
 app.get(`/api/articles`, getAllArticles);
 app.get(`/api/articles/:article_id/comments`, getCommentsById);
+app.post(`/api/articles/:article_id/comments`, postCommentsById);
 
+//handle route errors
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
 });
-
-//handl psql errors
+//handle PSQL erros
 app.use((err, req, res, next) => {
-  const badReqCodes = [`42703`, `22P02`];
-  if (badReqCodes.includes(err.code)) {
-    res.status(400).send({ msg: `bad request` });
+  const badReq = ["23502", "22P02"];
+  if (badReq.includes(err.code)) {
+    res.status(400).send({ msg: "Invalid data type for body or request" });
+  } else if (err.code === "23503") {
+    res.status(404).send({ msg: "Username does not exist in database" });
   } else {
     next(err);
   }
 });
-
 //handle custom errors
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
@@ -38,9 +43,9 @@ app.use((err, req, res, next) => {
     next(err);
   }
 });
-
 //handle unexpected errors
 app.use((err, req, res, next) => {
+  console.log(err);
   res.sendStatus(500);
 });
 
