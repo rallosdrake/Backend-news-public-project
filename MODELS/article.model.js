@@ -120,3 +120,13 @@ exports.addCommentsById = (article_id, body, username) => {
       }
     });
 };
+exports.postArticle = (input) => {
+  return db
+    .query(
+      `INSERT INTO articles (author, title, body, topic) VALUES ($1, $2, $3, $4) RETURNING *;`,
+      [input.author, input.title, input.body, input.topic]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};
