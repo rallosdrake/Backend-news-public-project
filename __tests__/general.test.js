@@ -417,3 +417,48 @@ describe("PATCH/api/comments/:comment_id", () => {
       });
   });
 });
+describe("POST/articles", () => {
+  test("201:responds with posted article when given correct input", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "cats are great",
+        body: "aren't they just",
+        topic: "cats",
+      })
+      .expect(201)
+      .then((result) => {
+        expect(result.body.result).toMatchObject({
+          author: "butter_bridge",
+          title: "cats are great",
+          body: "aren't they just",
+          topic: "cats",
+          article_id: expect.any(Number),
+          votes: 0,
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test("400:responds with correct error messages", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "cats are great",
+        body: "aren't they just",
+      })
+      .expect(400);
+  });
+  test("404:responds with correct error messages", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "cats are great",
+        body: "aren't they just",
+        topic: 2,
+      })
+      .expect(404);
+  });
+});
