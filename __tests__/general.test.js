@@ -207,64 +207,72 @@ describe("GET/api/articles/:article_id/comments", () => {
         });
       });
   });
+  test("200: responds with array of length one when limit set to one", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=1")
+      .expect(200)
+      .then((result) => {
+        expect(result.body.comments.length).toBe(5);
+      });
+  });
+});
 
-  test("400:responds with correct error message for datatype", () => {
-    return request(app)
-      .get("/api/articles/cheese/comments")
-      .expect(400)
-      .then((result) => {
-        expect(result.body).toEqual({
-          msg: "Invalid data type for body or request",
-        });
+test("400:responds with correct error message for datatype", () => {
+  return request(app)
+    .get("/api/articles/cheese/comments")
+    .expect(400)
+    .then((result) => {
+      expect(result.body).toEqual({
+        msg: "Invalid data type for body or request",
       });
-  });
-  test("400:responds with correct error message for 404", () => {
-    return request(app)
-      .get("/api/articles/1000/comments")
-      .expect(404)
-      .then((result) => {
-        expect(result.text).toBe("article not found");
+    });
+});
+test("400:responds with correct error message for 404", () => {
+  return request(app)
+    .get("/api/articles/1000/comments")
+    .expect(404)
+    .then((result) => {
+      expect(result.text).toBe("article not found");
+    });
+});
+test("200:responds with empty array for article without comments", () => {
+  return request(app)
+    .get("/api/articles/2/comments")
+    .expect(200)
+    .then((result) => {
+      expect(result.body.comments).toBeInstanceOf(Array);
+      expect(result.body.comments.length).toBe(0);
+    });
+});
+test("200: endpoint works as intended with default queries", () => {
+  return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then((result) => {
+      expect(result.body.articles).toBeInstanceOf(Array);
+      expect(result.body.articles).toBeSortedBy("created_at", {
+        descending: true,
       });
-  });
-  test("200:responds with empty array for article without comments", () => {
-    return request(app)
-      .get("/api/articles/2/comments")
-      .expect(200)
-      .then((result) => {
-        expect(result.body.comments).toBeInstanceOf(Array);
-        expect(result.body.comments.length).toBe(0);
-      });
-  });
-  test("200: endpoint works as intended with default queries", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then((result) => {
-        expect(result.body.articles).toBeInstanceOf(Array);
-        expect(result.body.articles).toBeSortedBy("created_at", {
-          descending: true,
-        });
-      });
-  });
-  test("200: endpoint works as intended with topic", () => {
-    return request(app)
-      .get("/api/articles?topic=cats")
-      .expect(200)
-      .then((result) => {
-        expect(result.body.articles.length).toBe(1);
-      });
-  });
+    });
+});
+test("200: endpoint works as intended with topic", () => {
+  return request(app)
+    .get("/api/articles?topic=cats")
+    .expect(200)
+    .then((result) => {
+      expect(result.body.articles.length).toBe(1);
+    });
+});
 
-  test("400: responds with correct error message when limited and offset", () => {
-    return request(app)
-      .get("/api/articles?limit=1&page=cheese")
-      .expect(400)
-      .then((result) => {
-        expect(result.body).toEqual({
-          msg: "Invalid data type for body or request",
-        });
+test("400: responds with correct error message when limited and offset", () => {
+  return request(app)
+    .get("/api/articles?limit=1&page=cheese")
+    .expect(400)
+    .then((result) => {
+      expect(result.body).toEqual({
+        msg: "Invalid data type for body or request",
       });
-  });
+    });
 });
 
 describe("POST/api/articles/:article_id/comments", () => {
@@ -498,14 +506,14 @@ describe("POST/topics", () => {
     return request(app)
       .post("/api/topics")
       .send({
-        slug: "cool",
-        description: "its cool",
+        slug: "why slug",
+        description: "who knows",
       })
       .expect(201)
       .then((result) => {
         expect(result.body.topic).toMatchObject({
-          slug: "cool",
-          description: "its cool",
+          slug: "why slug",
+          description: "who knows",
         });
       });
   });
@@ -516,6 +524,24 @@ describe("POST/topics", () => {
         snail: "cool",
         description: "its slow",
       })
+      .expect(400)
+      .then((result) => {
+        expect(result.body.msg).toEqual(
+          "Invalid data type for body or request"
+        );
+      });
+  });
+});
+
+describe("DELETE/api/articles/article_id", () => {
+  test("204: works as intended when given correct id", () => {
+    return request(app)
+      .delete("/api/articles/1")
+      .then((result) => {});
+  });
+  test("400: works as intended when given incorrect id", () => {
+    return request(app)
+      .delete("/api/articles/cheese")
       .expect(400)
       .then((result) => {
         expect(result.body.msg).toEqual(
