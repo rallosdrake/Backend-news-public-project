@@ -5,6 +5,7 @@ const {
   fetchCommentsById,
   addCommentsById,
   postArticle,
+  deleteArticle,
 } = require("../MODELS/article.model");
 
 exports.getArticleById = (req, res, next) => {
@@ -43,7 +44,8 @@ exports.getAllArticles = (req, res, next) => {
 
 exports.getCommentsById = (req, res, next) => {
   const { article_id } = req.params;
-  fetchCommentsById(article_id)
+  const { limit, page } = req.body;
+  fetchCommentsById(article_id, limit, page)
     .then((result) => {
       res.send({ comments: result });
     })
@@ -67,6 +69,17 @@ exports.postNewArticle = (req, res, next) => {
   postArticle(input)
     .then((result) => {
       res.status(201).send({ result });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.deleteByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  deleteArticle(article_id)
+    .then((result) => {
+      res.status(204).send();
     })
     .catch((err) => {
       next(err);
