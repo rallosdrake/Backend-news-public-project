@@ -41,7 +41,9 @@ exports.changeArticleById = (article_id, inc_votes) => {
 exports.fetchArticles = async (
   sort_by = "created_at",
   order = "desc",
-  topic
+  topic,
+  limit = 10,
+  p
 ) => {
   const queryValues = [];
   const Topics = await db.query("SELECT slug FROM topics;");
@@ -67,7 +69,12 @@ exports.fetchArticles = async (
     queryValues.push(topic);
   }
   queryStr += ` GROUP BY articles.article_id`;
-  queryStr += ` ORDER BY ${sort_by} ${order};`;
+  queryStr += ` ORDER BY ${sort_by} ${order} LIMIT ${limit}`;
+
+  if (p) {
+    let offset = p * limit;
+    queryStr += `OFFSET ${offset}`;
+  }
   if (topic) {
     if (queryValues.length) {
       const result = await db.query(queryStr, queryValues);

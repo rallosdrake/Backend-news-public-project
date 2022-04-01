@@ -5,11 +5,13 @@ exports.handleRouteErrors = (req, res) => {
 
 //handle PSQL errors
 exports.handlePsqlErrors = (err, req, res, next) => {
-  const badReq = ["23502", "22P02"];
+  const badReq = ["23502", "22P02", "42703"];
   if (badReq.includes(err.code)) {
     res.status(400).send({ msg: "Invalid data type for body or request" });
   } else if (err.code === "23503") {
     res.status(404).send({ msg: "Username does not exist in database" });
+  } else if (err.code === "42703") {
+    res.status(404).send({ msg: "Invalid data type for body or request" });
   } else {
     next(err);
   }
