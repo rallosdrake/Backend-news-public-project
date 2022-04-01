@@ -66,7 +66,6 @@ exports.postNewArticle = (req, res, next) => {
   const input = req.body;
   postArticle(input)
     .then((result) => {
-      console.log(result);
       res.status(201).send({ result });
     })
     .catch((err) => {
