@@ -7,15 +7,16 @@ const {
   handleServerErrors,
   handleRouteErrors,
 } = require(`./errors/index`);
+const cors = require(`cors`);
 
 const apiRouter = require(`./Routes/api-routes`);
 
-app.use(`/api`, apiRouter);
+app.use(cors(`/api`, apiRouter));
 
-app.use(handleRouteErrors);
-app.use(handleCustomErrors);
-app.use(handlePsqlErrors);
-app.use(handleServerErrors);
+app.use(cors(handleRouteErrors));
+app.use(cors(handleCustomErrors));
+app.use(cors(handlePsqlErrors));
+app.use(cors(handleServerErrors));
 
-app.use(`/api`, apiRouter);
+app.use(cors(`/api`, apiRouter));
 module.exports = app;
