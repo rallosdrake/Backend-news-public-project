@@ -43,7 +43,7 @@ exports.fetchArticles = async (
   order = "desc",
   topic,
   limit = 10,
-  p
+  page
 ) => {
   const queryValues = [];
   const Topics = await db.query("SELECT slug FROM topics;");
@@ -71,8 +71,8 @@ exports.fetchArticles = async (
   queryStr += ` GROUP BY articles.article_id`;
   queryStr += ` ORDER BY ${sort_by} ${order} LIMIT ${limit}`;
 
-  if (p) {
-    let offset = p * limit;
+  if (page) {
+    let offset = page * limit;
     queryStr += `OFFSET ${offset}`;
   }
   if (topic) {
