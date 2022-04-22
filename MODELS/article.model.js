@@ -42,7 +42,7 @@ exports.fetchArticles = async (
   sort_by = "created_at",
   order = "desc",
   topic,
-  limit = 100,
+  limit = 10,
   p
 ) => {
   const queryValues = [];
