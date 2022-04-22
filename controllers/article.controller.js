@@ -59,7 +59,7 @@ exports.postCommentsById = (req, res, next) => {
 
   addCommentsById(article_id, body, username)
     .then((result) => {
-      res.send({ comment: result });
+      res.status(201).send({ comment: result });
     })
     .catch((err) => {
       next(err);

@@ -122,7 +122,7 @@ exports.addCommentsById = (article_id, body, username) => {
       if (result.rows.length) {
         return db
           .query(
-            `INSERT INTO comments (article_id, body, author) VALUES ($1, $2, $3);`,
+            `INSERT INTO comments (article_id, body, author) VALUES ($1, $2, $3) RETURNING *;`,
             [article_id, body, username]
           )
           .then((result) => {

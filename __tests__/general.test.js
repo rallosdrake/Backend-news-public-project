@@ -283,7 +283,7 @@ describe("POST/api/articles/:article_id/comments", () => {
         username: "butter_bridge",
         body: "Great article",
       })
-      .expect(200)
+      .expect(201)
       .then((result) => {
         expect(result.body.comment).toBeInstanceOf(Object);
         expect(result.body.comment).toMatchObject({
