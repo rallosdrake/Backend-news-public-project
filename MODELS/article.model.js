@@ -125,14 +125,8 @@ exports.addCommentsById = (article_id, body, username) => {
             `INSERT INTO comments (article_id, body, author) VALUES ($1, $2, $3);`,
             [article_id, body, username]
           )
-          .then(() => {
-            return db
-              .query(`SELECT * FROM comments WHERE article_id = $1;`, [
-                article_id,
-              ])
-              .then((result) => {
-                return result.rows[0];
-              });
+          .then((result) => {
+            return result.rows[0];
           });
       } else {
         return Promise.reject({ status: 404, msg: "article not found" });
