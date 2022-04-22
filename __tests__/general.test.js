@@ -370,16 +370,6 @@ describe("DELETE/api/comments/:comment_id", () => {
       .then(() => {});
   });
 });
-describe("GET/api", () => {
-  test("200: Responds with a list of all endpoints and there uses", () => {
-    return request(app)
-      .get("/api")
-      .expect(200)
-      .then((result) => {
-        expect(result.body).toEqual(data);
-      });
-  });
-});
 
 describe("GET/users/:username", () => {
   test("works as intended", () => {
