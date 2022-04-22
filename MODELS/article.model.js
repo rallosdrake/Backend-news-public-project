@@ -42,7 +42,7 @@ exports.fetchArticles = async (
   sort_by = "created_at",
   order = "desc",
   topic,
-  limit = 10,
+  limit = 100,
   p
 ) => {
   const queryValues = [];
@@ -87,7 +87,7 @@ exports.fetchArticles = async (
   return result.rows;
 };
 
-exports.fetchCommentsById = (article_id, limit = 5, page) => {
+exports.fetchCommentsById = (article_id, limit = 10, page) => {
   return db
     .query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id])
     .then((result) => {

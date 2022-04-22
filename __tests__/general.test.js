@@ -212,7 +212,7 @@ describe("GET/api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments?limit=1")
       .expect(200)
       .then((result) => {
-        expect(result.body.comments.length).toBe(5);
+        expect(result.body.comments.length).toBe(10);
       });
   });
 });
