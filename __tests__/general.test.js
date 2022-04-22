@@ -250,7 +250,7 @@ test("200: endpoint works as intended with default queries", () => {
     .expect(200)
     .then((result) => {
       expect(result.body.articles).toBeInstanceOf(Array);
-      expect(result.body.articles).toBeSortedBy("created_at", {
+      expect(result.body.articles).toBeSortedBy("votes", {
         descending: true,
       });
     });

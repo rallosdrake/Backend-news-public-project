@@ -39,7 +39,7 @@ exports.changeArticleById = (article_id, inc_votes) => {
 };
 
 exports.fetchArticles = async (
-  sort_by = "created_at",
+  sort_by = "votes",
   order = "desc",
   topic,
   limit = 10,
