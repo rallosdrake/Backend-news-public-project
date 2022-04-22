@@ -55,6 +55,7 @@ exports.fetchArticles = async (
     "author",
     "body",
     "votes",
+    "comment_count",
   ];
   const validOrder = ["asc", "desc"];
   if (!validSort_by.includes(sort_by) || !validOrder.includes(order)) {
