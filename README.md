@@ -27,7 +27,7 @@ Within my API you are able to make the following requests:
 
 -  [Front end repo](https://github.com/rallosdrake/Frontend-nc-news).
 
-- [Hosted API](https://extraordinary-semifreddo-268619.netlify.app/).
+- [Hosted API](https://enigmatic-tor-40960.herokuapp.com/).
 ## Running Locally
 1. `git clone` [this repo](https://github.com/rallosdrake/Backend-news-public-project)
 2. `cd Backend-news-public-project`
